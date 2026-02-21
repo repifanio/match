@@ -1,14 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AnalisysService } from './analysis.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('analisys')
 export class AnalisysController {
 
     constructor(private analisysService: AnalisysService) {}
 
-    @Get()
-    public async getAnalisys(): Promise<any> {
-        const analysisData = await this.analisysService.getAnalisys();
-        return { message: analysisData};
+    @Post('/profile')
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadProfile(@UploadedFile() file: Express.Multer.File) {
+        if (!file) {
+            throw new Error('Arquivo não enviado');
+        }
+
+        const extractedText = await this.analisysService.extractPdfText(file);
+
+        return {
+            extractedText,
+        };
     }
 }

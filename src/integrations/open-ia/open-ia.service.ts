@@ -20,9 +20,9 @@ export class OpenIaService {
 
     async invoke(systemPrompt: string, userPrompt: string) {
         const body = {
-            anthropic_version: "bedrock-2023-05-31",
-            max_tokens: 5000,
-            temperature: 0.3,
+            anthropic_version: process.env.AI_MODEL_VERSION,
+            max_tokens: process.env.AI_MAX_TOKENS,
+            temperature: process.env.AI_TEMPERATURE,
             system: systemPrompt,
             messages: [
                 {
@@ -33,7 +33,7 @@ export class OpenIaService {
         };
 
         const command = new InvokeModelCommand({
-            modelId: "anthropic.claude-3-sonnet-20240229-v1:0",
+            modelId: process.env.AI_MODEL_ID,
             contentType: "application/json",
             accept: "application/json",
             body: JSON.stringify(body),
@@ -46,10 +46,5 @@ export class OpenIaService {
         );
 
         return decoded.content[0].text;
-    }
-
-    public async fetchanalysis(): Promise<any> {
-        // Implement your logic to fetch analysis from OpenIA API
-        return { message: 'Analysis data from OpenIA API' };
     }
 }

@@ -3,6 +3,7 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from '@aws-sdk/client-bedrock-runtime';
+import { UserPrompt } from '../../common/interfaces/user-prompt.interface';
 
 @Injectable()
 export class OpenIaService {
@@ -18,16 +19,16 @@ export class OpenIaService {
         });
     }
 
-    async invoke(systemPrompt: string, userPrompt: string) {
+    async invoke(systemPrompt: string, userPrompt: UserPrompt): Promise<string> {
         const body = {
             anthropic_version: process.env.AI_MODEL_VERSION,
-            max_tokens: process.env.AI_MAX_TOKENS,
-            temperature: process.env.AI_TEMPERATURE,
+            max_tokens: parseInt(process.env.AI_MAX_TOKENS!, 10),
+            temperature: parseFloat(process.env.AI_TEMPERATURE!),
             system: systemPrompt,
             messages: [
                 {
                 role: "user",
-                content: userPrompt,
+                content: JSON.stringify(userPrompt),
                 },
             ],
         };

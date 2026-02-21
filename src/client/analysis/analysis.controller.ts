@@ -1,6 +1,7 @@
-import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AnalisysService } from './analysis.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserPrompt } from 'src/common/interfaces/user-prompt.interface';
 
 @Controller('analisys')
 export class AnalisysController {
@@ -18,6 +19,21 @@ export class AnalisysController {
 
         return {
             extractedText,
+        };
+    }
+
+    @Post('/generate')
+    async generateAnalysis(@Body() payload) {
+        const { profileText, oportunityDescription } = payload;
+
+        if (!profileText || !oportunityDescription) {
+            throw new Error('Dados insuficientes para análise');
+        }
+
+        const analysisResult = await this.analisysService.generateAnalysis(profileText, oportunityDescription);
+
+        return {
+            analysis: analysisResult,
         };
     }
 }

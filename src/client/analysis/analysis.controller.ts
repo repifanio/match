@@ -3,7 +3,7 @@ import { AnalisysService } from './analysis.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserPrompt } from 'src/common/interfaces/user-prompt.interface';
 
-@Controller('analisys')
+@Controller('analysis')
 export class AnalisysController {
 
     constructor(private analisysService: AnalisysService) {}
